@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const admin = require("./models/Admin");
 const app = express();
 
