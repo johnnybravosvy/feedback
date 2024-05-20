@@ -1,3 +1,8 @@
+import { User } from "./models/users";
+import { AdminRouter } from "./routes/auth";
+import { userRouter } from "./routes/User";
+import { feedbackRouter } from "./routes/feedback";
+
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -16,6 +21,19 @@ app.use(
 );
 dotenv.config();
 app.use("/auth", AdminRouter);
+app.use("/user", userRouter);
+app.use("/feedback", feedbackRouter);
+
+app.get("/dashboard", async (req, res) => {
+  try {
+    const user = await User.countDocuments();
+    const admin = await Admin.countDocuments();
+    const feedback = await Feedback.countDocuments();
+    return res.json({ ok: true, user, feedback, admin });
+  } catch (err) {
+    return res.json;
+  }
+});
 
 mongoose
   .connect("mongodb://localhost/feedback")
