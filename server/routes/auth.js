@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { Admin } = require("../models/Admin");
 const { User } = require("../models/users");
+const verifyUser = require("../middlewares/verifyUser");
 
 const router = express.Router();
 
@@ -49,47 +50,18 @@ router.post("/login", async (req, res) => {
     }
 });
 
-const verifyAdmin = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.json({ message: "Invalid Admin" });
-    } else {
-        jwt.verify(token, process.env.Admin_key, (err, decoded) => {
-            if (err) {
-                return res.json({ message: "Invalid token" });
-            } else {
-                req.username = decoded.username;
-                req.role = decoded.role;
-                next();
-            }
-        });
-    }
-};
+// ! THIS IS AN EXAMPLE OF HOW TO USE A MIDDLEWARE (verifyUser is the middleware called)
 
-const verifyUser = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.json({ message: "Invalid User" });
-    } else {
-        jwt.verify(token, process.env.Admin_key, (err, decoded) => {
-            if (err) {
-                jwt.verify(token, process.env.User_key, (err, decoded) => {
-                    if (err) {
-                        return res.json({ message: "Invalid token" });
-                    } else {
-                        req.username = decoded.username;
-                        req.role = decoded.role;
-                        next();
-                    }
-                });
-            } else {
-                req.username = decoded.username;
-                req.role = decoded.role;
-                next();
-            }
-        });
-    }
-};
+// router.get("/dashboard", verifyUser, async (req, res) => {
+//     try {
+//         const user = await User.countDocuments();
+//         const admin = await Admin.countDocuments();
+//         const feedback = await Feedback.countDocuments();
+//         return res.json({ ok: true, user, feedback, admin });
+//     } catch (err) {
+//         return res.json;
+//     }
+// });
 
 router.get("/verify", (req, res) => {
     return res.json({ login: true, role: req.role });

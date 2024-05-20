@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { User } = require("./models/users");
-const { AdminRouter } = require("./routes/auth");
-const { userRouter } = require("./routes/User");
-const { feedbackRouter } = require("./routes/feedback");
+const AdminRouter = require("./routes/auth");
+const userRouter = require("./routes/User");
+const feedbackRouter = require("./routes/feedback");
 
 const app = express();
 
@@ -21,8 +21,8 @@ app.use(
 dotenv.config();
 
 app.use("/auth", AdminRouter);
-// app.use("/user", userRouter);
-// app.use("/feedback", feedbackRouter);
+app.use("/user", userRouter);
+app.use("/feedback", feedbackRouter);
 
 mongoose
     .connect("mongodb://localhost/feedback")
